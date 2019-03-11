@@ -1,0 +1,21 @@
+---
+v2:
+  metadata:
+    title: "{{ inventory_hostname|title  }}"
+  login:
+    host: "{{ inventory_hostname }}.hpc.yale.internal"
+  job:
+    adapter: "slurm"
+    bin: "/bin"
+  batch_connect:
+    basic:
+      script_wrapper: |
+        module purge
+        export XDG_RUNTIME_DIR=$(mktemp -d -p /dev/shm)
+        %s
+    vnc:
+      script_wrapper: |
+        module purge
+        export XDG_RUNTIME_DIR=$(mktemp -d -p /dev/shm)
+        export WEBSOCKIFY_CMD=/usr/bin/websockify
+        %s

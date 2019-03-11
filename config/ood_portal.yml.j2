@@ -1,0 +1,14 @@
+---
+servername: ood-{{ inventory_hostname }}.hpc.yale.edu
+ssl:
+  - 'SSLCertificateFile "/etc/pki/tls/certs/ood-{{ inventory_hostname }}.hpc.yale.edu.pem"'
+  - 'SSLCertificateKeyFile "/etc/pki/tls/private/ood-{{ inventory_hostname }}.hpc.yale.edu.key"'
+  - 'SSLCertificateChainFile "/etc/pki/tls/certs/globalsign_intermediate.pem"'
+auth:
+  - 'AuthType CAS'
+  - 'Require valid-user'
+  - 'CASScope /'
+
+host_regex: '(gpu|bigmem|c\d+n)\d+\.{{ inventory_hostname }}\.hpc\.yale\.internal'
+node_uri: '/node'
+rnode_uri: '/rnode'

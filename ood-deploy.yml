@@ -1,0 +1,115 @@
+---
+- hosts: all
+  tasks:
+    - name: "Create Directories"
+      file:
+        path: "/etc/ood/config/{{ item }}"
+        state: directory
+        mode: 0775
+      with_items:
+      - ["clusters.d", 
+         "announcements.d",
+         "apps/bc_desktop/submit",
+         "apps/dashboard", 
+         "locales"]
+      tags:
+        - base
+
+    - name: "Apache and Cluster Configs"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: 0755
+      with_items:
+        # Apache config: https://osc.github.io/ood-documentation/master/authentication/overview/configure-authentication.html?highlight=ood_portal#add-to-ondemand-portal
+        - {src: "config/ood_portal.yml.j2",
+           dest: "/etc/ood/config/ood_portal.yml"}
+        # Cluster Config: https://osc.github.io/ood-documentation/master/installation/cluster-config-schema.html
+        - {src: "config/Cluster.yml.j2",
+           dest: "/etc/ood/config/clusters.d/{{ inventory_hostname|title  }}.yml"}
+      tags:
+        - base
+
+    - name: "Enable CAS Auth module"
+      lineinfile:
+        dest: /opt/rh/httpd24/root/etc/httpd/conf.modules.d/yalehpc-cas.conf
+        line: "LoadModule auth_cas_module modules/mod_auth_cas.so"
+        state: present
+        create: yes
+        mode: 0755
+      tags:
+        - base
+
+    - name: "Deploy OOD apache config"
+      command: "/opt/ood/ood-portal-generator/sbin/update_ood_portal"
+      tags:
+        base
+
+    - name: "Dashboard Templates"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: 0755
+      with_items:
+        # https://discourse.osc.edu/t/moving-shell-access-to-apps/179
+        - {src: "config/nginx_stage.yml.j2",
+          dest: "/etc/ood/config/nginx_stage.yml"}
+        - {src: "config/apps/dashboard/env.j2",
+          dest: "/etc/ood/config/apps/dashboard/env"}
+      tags:
+        - dashboard
+
+    - name: "Dashboard Branding"
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: 0755
+      with_items:
+        # Landing page customization: https://osc.github.io/ood-documentation/master/customization.html#customize-tagline-and-other-text-on-dashboard
+        - {src: "config/locales/en.yml",
+          dest: "/etc/ood/config/locales/en.yml"}
+        - {src: "img/logo.png",
+          dest: "/var/www/ood/public/logo.png"}
+        - {src: "img/favicon.ico",
+          dest: "/var/www/ood/public/favicon.ico"}
+      tags:
+        - dashboard
+
+    - name: "Announcements"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: 0755
+      with_items:
+        # Empty md file keeps logs from squaking about it not existing
+        - {src: "config/announcement.md",
+            dest: "/etc/ood/config/announcement.md"}
+        # Real announcements
+        - {src: "config/announcement.yml.j2",
+            dest: "/etc/ood/config/announcement.yml.j2"}
+      tags:
+        - announce
+
+    - name: "Interactive Desktop"
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        mode: 0755
+      with_items:
+        # config: https://osc.github.io/ood-documentation/master/enable-desktops/modify-form-attributes.html
+        - {src: "config/apps/bc_desktop/Cluster.yml.j2",
+           dest: "/etc/ood/config/apps/bc_desktop/{{ inventory_hostname|title  }}.yml"}
+        - {src: "config/apps/bc_desktop/slurm_desktop.yml.erb",
+           dest: "/etc/ood/config/apps/bc_desktop/submit/slurm_desktop.yml.erb"}
+      tags:
+        - vnc
+
+    - name: "Restart httpd"
+      systemd:
+        name: "{{ item }}"
+        state: reloaded
+      with_items:
+        - "httpd24-httpd"
+        - "httpd24-htcacheclean"
+      tags:
+        base,http

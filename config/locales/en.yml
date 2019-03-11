@@ -1,0 +1,7 @@
+---
+en:
+  dashboard:
+    welcome_html: |
+      %{logo_img_tag}
+      <p class="lead">OnDemand is a web portal to your HPC resources.</p>
+    motd_title: "Login Message"

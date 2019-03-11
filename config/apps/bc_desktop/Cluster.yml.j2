@@ -1,0 +1,24 @@
+---
+title: "{{ inventory_hostname|title  }} VNC Desktop"
+cluster: "{{ inventory_hostname|title  }}"
+attributes:
+  bc_vnc_resolution:
+    required: true
+    value: "1024x768"
+  node_type: null
+  bc_vnc_idle: 0
+  bc_num_hours: 
+    value: 8
+  bc_num_slots: 
+    value: 2
+    min: 1
+  bc_account:
+    label: "Slurm Account (the -A slurm parameter)"
+    help: "You can leave this field blank if you're submitting a standard VNC job."
+  bc_num_slots: 
+    label: "Number of CPUs"
+  bc_queue:
+    value: "interactive"
+    help: "Either use interactive or a PI partition"
+
+submit: "submit/slurm_desktop.yml.erb"
