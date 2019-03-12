@@ -56,6 +56,9 @@
           dest: "/etc/ood/config/nginx_stage.yml"}
         - {src: "config/apps/dashboard/env.j2",
           dest: "/etc/ood/config/apps/dashboard/env"}
+        - {src: "config/www/shell/manifest.yml.j2",
+          dest: "/var/www/ood/apps/sys/shell/manifest.yml"}
+
       tags:
         - dashboard
 
