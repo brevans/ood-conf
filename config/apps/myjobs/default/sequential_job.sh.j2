@@ -1,0 +1,20 @@
+#!/bin/bash
+{% if inventory_hostname == 'grace' %}
+#SBATCH --partition=day
+{% elif inventory_hostname == 'milgram' %}
+#SBATCH --partition=short
+{% else %}
+#SBATCH --partition=general
+{% endif %}
+#SBATCH --job-name=simple_job
+#SBATCH --ntasks=1 --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem-per-cpu=5G
+#SBATCH --time=00-00:01:00
+#SBATCH --mail-type=ALL
+
+# do something
+echo "I'm echoing to stdout"
+echo "I'm echoing to stderr" 1>&2
+echo "My JobID is ${SLURM_JOBID}"
+echo "I have ${SLURM_CPUS_ON_NODE} CPUs on node $(hostname -s)"
