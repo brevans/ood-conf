@@ -6,10 +6,6 @@ Configurations for YCRC OOD deployments. Here we assume that the hosts in the in
 
 Deployments are handled with Ansible. You need an ssh key authorized to log in as root on the ondemand nodes to deploy. Configuration files are either static or `jinja2` templated files all kept in the `config` directory. Please take a look at the playbook `ood-deploy.yml` for annotations and links to relevant ood documentation.
 
-### Tags
-
-Tasks in the playbook are [tagged](https://docs.ansible.com/ansible/latest/playbooks_tags.html) with categories. To just see a list, run `ansible-playbook --list-tags ood-deploy.yml`. The general idea is that you can either run all (and should when configuring a fresh install), or just redeploy the announcements, for example.
-
 ### To Deploy
 
 To dry run:
