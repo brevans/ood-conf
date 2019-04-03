@@ -12,25 +12,26 @@
     - name: OOD configuration files
       template:
         src: "{{ item.src }}"
-        dest: /etc/{{ item.path | regex_replace('\.j2$','') }}
+        path: /etc/{{ item.path | regex_replace('\.j2$','') }}
         mode: "{{ item.mode }}"
       with_filetree: ood_root/etc/
       when: item.state == "file"
 
-    - name: "Rename Cluster yml"
-      command: |
-        mv /etc/ood/config/clusters.d/Cluster.yml \
-           /etc/ood/config/clusters.d/{{ inventory_hostname|title  }}.yml
+    - name: "Symlink Cluster yml"
+      file: 
+        src: /etc/ood/config/clusters.d/Cluster.yml
+        path: /etc/ood/config/clusters.d/{{ inventory_hostname|title  }}.yml
+        state: link
 
     - name: "Dashboard shell tweak"
       template:
         src: "ood_root/var/www/ood/apps/sys/shell/manifest.yml.j2"
-        dest: "/var/www/ood/apps/sys/shell/manifest.yml"
+        path: "/var/www/ood/apps/sys/shell/manifest.yml"
 
     - name: "Dashboard Branding"
       copy:
         src: "{{ item }}"
-        dest: "/var/www/ood/public/"
+        path: "/var/www/ood/public/"
       with_fileglob: 
          - "ood_root/var/www/ood/public/*"
 
