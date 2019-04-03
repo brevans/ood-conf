@@ -22,14 +22,6 @@
         mv /etc/ood/config/clusters.d/Cluster.yml \
            /etc/ood/config/clusters.d/{{ inventory_hostname|title  }}.yml
 
-    - name: "Enable CAS Auth module"
-      lineinfile:
-        dest: /opt/rh/httpd24/root/etc/httpd/conf.modules.d/yalehpc-cas.conf
-        line: "LoadModule auth_cas_module modules/mod_auth_cas.so"
-        state: present
-        create: yes
-        mode: 0644
-
     - name: "Dashboard shell tweak"
       template:
         src: "ood_root/var/www/ood/apps/sys/shell/manifest.yml.j2"
