@@ -1,7 +1,7 @@
 ---
 - hosts: all
   tasks:
-    - name: "Make sure directories exist"
+    - name: Make sure directories exist
       file:
         path: /{{ item.path }}
         state: directory
@@ -12,35 +12,48 @@
     - name: OOD configuration files
       template:
         src: "{{ item.src }}"
-        path: /etc/{{ item.path | regex_replace('\.j2$','') }}
+        dest: /etc/{{ item.path | regex_replace('\.j2$','') }}
         mode: "{{ item.mode }}"
       with_filetree: ood_root/etc/
       when: item.state == "file"
 
-    - name: "Symlink Cluster yml"
+    - name: Symlink Cluster yml
       file: 
         src: /etc/ood/config/clusters.d/Cluster.yml
         path: /etc/ood/config/clusters.d/{{ inventory_hostname|title  }}.yml
         state: link
 
-    - name: "Dashboard shell tweak"
+    - name: Dashboard shell tweak
       template:
-        src: "ood_root/var/www/ood/apps/sys/shell/manifest.yml.j2"
-        path: "/var/www/ood/apps/sys/shell/manifest.yml"
+        src: ood_root/var/www/ood/apps/sys/shell/manifest.yml.j2
+        dest: /var/www/ood/apps/sys/shell/manifest.yml
 
-    - name: "Dashboard Branding"
+    - name: Dashboard Branding
       copy:
         src: "{{ item }}"
-        path: "/var/www/ood/public/"
+        dest: /var/www/ood/public/
       with_fileglob: 
          - "ood_root/var/www/ood/public/*"
 
-    - name: "Deploy OOD Apache config"
+    - name: Jupyter app
+      template:
+        src: "{{ item.src }}"
+        dest: /var/www/ood/apps/sys/bc_ycrc_jupyter/{{ item.path | regex_replace('\.j2$','') }}
+        mode: "{{ item.mode }}"
+      with_filetree: ood_root/var/www/ood/apps/sys/bc_ycrc_jupyter
+      when: item.state == "file" and not item.path.endswith(".png")
+
+    - name: Jupyter logo
+      copy:
+        src: ood_root/var/www/ood/apps/sys/bc_ycrc_jupyter/icon.png
+        dest: /var/www/ood/apps/sys/bc_ycrc_jupyter/icon.png
+
+    - name: Deploy OOD Apache config
       command: "/opt/ood/ood-portal-generator/sbin/update_ood_portal"
       register: update_ood_portal_out
       failed_when: update_ood_portal_out.rc > 1 
 
-    - name: "Restart httpd"
+    - name: Restart httpd
       when: update_ood_portal_out.rc == 0
       systemd:
         name: "{{ item }}"

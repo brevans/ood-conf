@@ -1,0 +1,9 @@
+# Job submission configuration file
+---
+batch_connect:
+  template: "basic"
+
+# Slurm has to be done with the "native" interface for now
+script:
+    native: [ "--cpus-per-task", "<%= bc_num_cores.to_i %>", "--mem-per-cpu", "<%= bc_amt_mem.to_i %>G" ]
+
