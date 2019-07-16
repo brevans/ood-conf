@@ -5,7 +5,7 @@
       file:
         path: /{{ item.path }}
         state: directory
-        mode: 0775
+        mode: 0755
       with_filetree: ood_root/
       when: item.state == "directory"
 
