@@ -17,11 +17,8 @@
       with_filetree: ood_root/etc/
       when: item.state == "file"
 
-    - name: Symlink Cluster yml
-      file: 
-        src: /etc/ood/config/clusters.d/Cluster.yml
-        path: /etc/ood/config/clusters.d/{{ inventory_hostname|title  }}.yml
-        state: link
+    - name: Rename Cluster yml
+      command: mv /etc/ood/config/clusters.d/Cluster.yml /etc/ood/config/clusters.d/{{ inventory_hostname|title  }}.yml
 
     - name: Dashboard shell tweak
       template:
