@@ -1,13 +1,13 @@
-[ood.farnam]
+[ood_farnam]
 farnam ansible_host=ondemand1.farnam.hpc.yale.internal ansible_user=root
 
-[ood.ruddle]
+[ood_ruddle]
 ruddle ansible_host=ondemand1.ruddle.hpc.yale.internal ansible_user=root
 
-[ood.grace]
+[ood_grace]
 grace ansible_host=ondemand1.grace.hpc.yale.internal ansible_user=root
 
 [ood:children]
-ood.farnam
-ood.ruddle
-ood.grace
+ood_farnam
+ood_ruddle
+ood_grace

@@ -18,7 +18,7 @@ To deploy:
 
 ``` bash
 # to just farnam
-ansible-playbook -l ood.farnam ood-deploy.yml
+ansible-playbook -l ood_farnam ood-deploy.yml
 # to everyone
 ansible-playbook ood-deploy.yml
 ```
