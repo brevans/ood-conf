@@ -9,6 +9,6 @@ auth:
   - 'Require valid-user'
   - 'CASScope /'
 
-host_regex: '(gpu|bigmem|c\d+n)\d+\.{{ inventory_hostname }}\.hpc\.yale\.internal'
+host_regex: '(gpu|bigmem|c\d+n|p\d+r\d+n)\d+\.{{ inventory_hostname }}\.hpc\.yale\.internal'
 node_uri: '/node'
 rnode_uri: '/rnode'
