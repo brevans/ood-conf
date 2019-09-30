@@ -1,0 +1,51 @@
+---
+cluster: {{ inventory_hostname|title }}
+title:   Remote Desktop (with GPU)
+
+attributes:
+  bc_vnc_idle: 0
+  desktop: "mate"
+  bc_num_hours:
+    value: 6
+  bc_num_slots: 1
+  bc_num_cores: 
+    widget: "number_field"
+    label: "Number of CPUs per node"
+    value: 1
+    min: 1
+    max: 20
+    step: 1
+  num_gpu: 
+    widget: "select" 
+    label:  "Number of GPUs per node"
+    options:
+      - [ "0" ]
+      - [ "1" ]
+      - [ "2" ]
+      - [ "3" ]
+      - [ "4" ]
+    help: "Select a value larger than 0 to use the GPU nodes" 
+  bc_amt_mem:
+    widget: "number_field"
+    label: "Memory in GiB"
+    value: 5
+    min: 5
+    step: 1
+  bc_account:
+    label: "Slurm Account (the -A slurm parameter)"
+    help: "This field is needed ONLY IF you are working with a different group than your default group. Leave it blank if you don't know what to put."
+  bc_queue:
+    value: "interactive"
+    help: "If number of GPUs per node is larger than 0, then a partition with GPU nodes must be provided."
+
+form:
+  - bc_vnc_idle
+  - desktop
+  - bc_num_slots
+  - bc_num_hours
+  - bc_num_cores
+  - num_gpu
+  - bc_amt_mem
+  - bc_account
+  - bc_queue
+  - bc_email_on_started

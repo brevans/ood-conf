@@ -12,6 +12,25 @@ cd "${HOME}"
 #
 <%= context.custom_environment.gsub /\r\n?/, "\n" %>
 
+module purge
+module load miniconda
+
+<% if context.custom_environment == 'ycrc_default' %>
+conda-env list|grep ycrc_default
+if [ $? -eq 1 ]; then
+    conda create -n ycrc_default <<HERE_BEGIN
+    y
+HERE_BEGIN
+    source activate <%= context.custom_environment %>
+    conda install jupyter  <<HERE_BEGIN2
+    y
+HERE_BEGIN2
+    conda deactivate
+fi
+<% end %>
+#conda activate context.custom_environment
+source activate <%= context.custom_environment %>
+
 # Benchmark info
 echo "TIMING - Starting jupyter at: $(date)"
 

@@ -1,0 +1,83 @@
+# Batch Connect app configuration file
+---
+cluster: {{ inventory_hostname|title }}
+title: "Jupyter Notebook"
+
+description: |
+  This app will launch a Jupyter Notebook server within a compute node.
+
+attributes:
+  custom_environment:
+    widget: select
+    label:  Environment Setup (select the miniconda environment.)
+    help:   If you want to create your own miniconda environment, please follow the [user guide](https://docs.ycrc.yale.edu/clusters-at-yale/guides/conda/#the-miniconda-module). You must install Jupyter with `conda install jupyter` at the minimum.
+    options: 
+      - [ "ycrc_default" ]
+      <%  
+        # hard code the path of conda-env as the module command is not available
+        conda_envs = `/gpfs/loomis/apps/avx/software/miniconda/4.7.10/bin/conda-env list|grep -v -e '#' -e 'base' -e 'ycrc_default'|rev|cut -d/ -f1 |rev`.split
+        conda_envs.each do |conda_env|
+      %>
+      - [ "<%= conda_env %>" ]
+      <%
+        end
+      %>    
+ 
+  bc_num_slots: 1
+
+  bc_num_cores:
+    widget: "number_field"
+    label: "Number of CPUs"
+    value: 1
+    min: 1
+    step: 1
+
+  num_gpu:
+    widget: "select"
+    label:  "Number of GPUs"
+    options:
+      - [ "0" ]
+      - [ "1" ]
+      - [ "2" ]
+      - [ "3" ]
+      - [ "4" ]
+    help: "Select a value larger than 0 to use a GPU node"
+
+  bc_amt_mem:
+    widget: "number_field"
+    label: "Memory per CPU in GiB"
+    value: 5
+    min: 1
+    step: 0.5
+
+  bc_queue:
+    label: "Partition"
+    value: "interactive"
+    help: "If number of GPUs per node is larger than 0, a partition with GPU nodes must be provided."
+
+  bc_account:
+    help: "This field is needed ONLY IF you are working with a different group than your default group.  
+           Leave it blank if you don't know what to put."
+
+  # Whether Conda extensions will be available within the Jupyter notebook 0==False
+  # see https://docs.continuum.io/anaconda/user-guide/tasks/use-jupyter-notebook-extensions
+  conda_extensions: "0"
+
+  # Any extra command line arguments to feed to the `jupyter notebook ...`
+  # command that launches the Jupyter notebook within the batch job
+  extra_jupyter_args: ""
+
+form:
+  - custom_environment
+  - conda_extensions
+  - extra_jupyter_args
+  - bc_num_slots
+  - bc_num_hours
+  - bc_num_cores
+  - num_gpu
+  - bc_amt_mem
+  - bc_queue
+  - bc_account
+  - bc_email_on_started
+
+submit: "submit/slurm_desktop.yml.erb"
