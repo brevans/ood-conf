@@ -45,6 +45,14 @@
         src: ood_root/var/www/ood/apps/sys/bc_ycrc_jupyter/icon.png
         dest: /var/www/ood/apps/sys/bc_ycrc_jupyter/icon.png
 
+    - name: VNC app
+      template:
+        src: "{{ item.src }}"
+        dest: /var/www/ood/apps/sys/ycrc_desktop/{{ item.path | regex_replace('\.j2$','') }}
+        mode: "{{ item.mode }}"
+      with_filetree: ood_root/var/www/ood/apps/sys/ycrc_desktop
+      when: item.state == "file"
+
     - name: Deploy OOD Apache config
       command: "/opt/ood/ood-portal-generator/sbin/update_ood_portal"
       register: update_ood_portal_out
