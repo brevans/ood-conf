@@ -11,7 +11,7 @@ Deployments are handled with Ansible. You need an ssh key authorized to log in a
 To dry run:
 
 ``` bash
-ansible-playbook --check --diff --connection=local -l ood.farnam ood-deploy.yml
+ansible-playbook --check --diff --connection=local -l ood_farnam ood-deploy.yml
 ```
 
 To deploy:
