@@ -67,6 +67,12 @@ attributes:
   # command that launches the Jupyter notebook within the batch job
   extra_jupyter_args: ""
 
+  additional_modules:
+    widget: "text_field"
+    label:  "Additional modules for Jupyter Notebook (optional)"
+    value:  ""
+    help:   "provide addtional modules for Jupyter Notebook. Module names are separated by a space."
+
 form:
   - custom_environment
   - conda_extensions
@@ -79,5 +85,6 @@ form:
   - bc_queue
   - bc_account
   - bc_email_on_started
+  - additional_modules
 
 submit: "submit/slurm_desktop.yml.erb"

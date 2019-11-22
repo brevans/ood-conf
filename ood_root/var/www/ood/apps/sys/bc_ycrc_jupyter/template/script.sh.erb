@@ -10,6 +10,10 @@ cd "${HOME}"
 module purge
 module load miniconda
 
+<% if context.additional_modules != "" %>
+module load <%= context.additional_modules %>
+<% end %>
+
 <% if context.custom_environment == 'ycrc_default' %>
 conda-env list|grep ycrc_default
 if [ $? -eq 1 ]; then

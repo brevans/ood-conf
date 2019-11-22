@@ -1,10 +1,10 @@
 <%
-app_name = "Mathematica"
+app_name = "Matlab"
 app_root = "/var/www/ood/apps/modules"+"/"+app_name
 %>
 ---
-cluster: Grace
-title:   <%= app_name %> 
+cluster: {{ inventory_hostname|title }}
+title:   Matlab 
 
 attributes:
   version:

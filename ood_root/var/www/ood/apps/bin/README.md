@@ -1,6 +1,6 @@
-## What Is It
+## What is it
 
-The executables in this directory will automatically generate the module versions used for the OOD APPs. 
+The executables in this directory will automatically generate the module version list used for OOD APPs. 
 
 ## How to Use
 
