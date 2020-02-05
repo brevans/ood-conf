@@ -14,8 +14,7 @@ attributes:
     options: 
       - [ "ycrc_default" ]
       <%  
-        # hard code the path of conda-env as the module command is not available
-        conda_envs = `/gpfs/loomis/apps/avx/software/miniconda/4.7.10/bin/conda-env list|grep -v -e '#' -e 'base' -e 'ycrc_default'|rev|cut -d/ -f1 |rev`.split
+        conda_envs = `/gpfs/loomis/bin/ycrc_conda_env.list`.split
         conda_envs.each do |conda_env|
       %>
       - [ "<%= conda_env %>" ]
@@ -56,6 +55,7 @@ attributes:
     help: "If number of GPUs per node is larger than 0, a partition with GPU nodes must be provided."
 
   bc_account:
+    label: Slurm Account (optional)
     help: "This field is needed ONLY IF you are working with a different group than your default group.  
            Leave it blank if you don't know what to put."
 

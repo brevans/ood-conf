@@ -17,16 +17,10 @@ module load <%= context.additional_modules %>
 <% if context.custom_environment == 'ycrc_default' %>
 conda-env list|grep ycrc_default
 if [ $? -eq 1 ]; then
-    conda create -n ycrc_default  python=3.7 <<HERE_BEGIN
-    y
-HERE_BEGIN
-    source activate <%= context.custom_environment %>
-    conda install jupyter  <<HERE_BEGIN2
-    y
-HERE_BEGIN2
-    conda deactivate
+    conda create -y -n ycrc_default jupyter
 fi
 <% end %>
+
 #conda activate context.custom_environment
 source activate <%= context.custom_environment %>
 
